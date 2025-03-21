@@ -1,26 +1,52 @@
+import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [pdfBase64, setPdfBase64] = useState('');
+
+  const handlePrint = () => {
+    if (!pdfBase64.startsWith('data:application/pdf;base64,')) {
+      alert('Please provide a valid base64 PDF string.');
+      return;
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = pdfBase64;
+    document.body.appendChild(iframe);
+
+    iframe.onload = function () {
+      setTimeout(() => {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+      }, 100);
+    };
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
+        <h2>Base64 PDF Preview & Print</h2>
+        <textarea
+          rows={6}
+          cols={80}
+          placeholder="Paste your base64 PDF string here..."
+          value={pdfBase64}
+          onChange={(e) => setPdfBase64(e.target.value)}
+        />
+        <br />
+        <button onClick={handlePrint} style={{ marginTop: '10px' }}>
+          Print PDF
+        </button>
+        {pdfBase64.startsWith('data:application/pdf;base64,') && (
+          <iframe
+            title="PDF Preview"
+            src={pdfBase64}
+            width="100%"
+            height="500px"
+            style={{ border: '1px solid #ccc', marginTop: '1rem' }}
+          />
+        )}
       </header>
     </div>
   );

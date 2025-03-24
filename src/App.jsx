@@ -12,25 +12,6 @@ function App() {
     }
   }, []);
 
-  const handlePrint = () => {
-    if (!pdfBase64.startsWith('data:application/pdf;base64,')) {
-      alert('Please provide a valid base64 PDF string.');
-      return;
-    }
-
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = pdfBase64;
-    document.body.appendChild(iframe);
-
-    iframe.onload = function () {
-      setTimeout(() => {
-        iframe.contentWindow?.focus();
-        iframe.contentWindow?.print();
-      }, 100);
-    };
-  };
-
   return (
     <div className="App">
       <header className="App-header">
@@ -47,7 +28,7 @@ function App() {
             title="PDF Preview"
             src={pdfBase64}
             width="100%"
-            height="500px"
+            height="1200"
             style={{ border: '1px solid #ccc', marginTop: '1rem' }}
           />
         )}
